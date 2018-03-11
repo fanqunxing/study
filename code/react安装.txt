@@ -1,0 +1,12 @@
+==== 手脚架搭建 ========
+首先确保自己安装了nodejs，然后全局安装yeoman
+npm install -g yo
+
+然后直接安装脚手架
+npm install -g generator-reactpackage
+
+在合适的地方新建一个文件夹，在文件夹下运行：
+yo reactpackage
+
+npm run dev //项目开发过程使用，启动服务，实时刷新
+npm run build //开发完成之后打包文件（js、css分开打包）
