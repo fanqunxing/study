@@ -1,0 +1,77 @@
+<p>装饰者模式是为了践行代码的开闭原则</p>
+
+<h3>代码设计六准则</h3>
+<ul>
+	<li>单一职责原则</li>
+	<li>里氏替换原则</li>
+	<li>依赖倒置原则</li>
+	<li>接口隔离原则</li>
+	<li>迪米特法则</li>
+	<li>合成复用原则</li>
+	<li>开闭原则</li>
+</ul>
+
+<button id="btn" onclick="alert('我有功能')">按钮</button>
+<script>
+
+//举两个场景栗子
+
+//场景1=> 项目要求修改给已有的按钮新增一个校验
+/**
+ * 为了不修改原代码，采用装饰者模式
+ */
+function bind(id,fn)
+{
+	var elem = document.getElementById(id);
+	//缓存原有的事件
+	var clickFn = elem.onclick;
+	elem.onclick = function()
+	{
+		clickFn();
+		fn();
+	}
+}
+
+bind("btn",function(){
+	alert("新校验");
+});
+
+
+//场景2=> 项目要求发送ajax以前要先获取token
+/**
+ * function ajax(data){
+ *	alert("ajax");
+ *	console.log(data);
+ * };
+ */
+
+/**
+ * 在不改原代码的情况下，可以如下实现
+ */
+
+//函数上添加新方法的工具
+var addFnBefore= function (fn, before) {
+    return function () {
+        before.apply(this,arguments);
+        return fn.apply(this,arguments);
+    };
+};
+
+//偷天换日，追加新方法
+ajax = addFnBefore(ajax, function(data){
+	var token = "SDGFBGREG";
+	alert("token=>"+token)
+	data.token = token;
+});
+
+
+function ajax(data){
+	alert("ajax");
+	console.log(data);
+};
+
+
+//测试一下
+ajax({name:"张三"});
+
+</script>

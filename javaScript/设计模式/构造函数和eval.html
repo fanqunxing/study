@@ -1,0 +1,30 @@
+<p>eval和Function()构造函数是js里面开挂般存在的选手</p>
+<p>eval和Function()构造函数可以进行js编译</p>
+<p>当然js"编译"这个词并不太准确</p>
+<script>
+/**
+ * 1. eval 
+ * eval可以直接调用js引擎，执行js代码
+ * 从eval这个游戏角色出现后就一直被削弱
+ */
+var runCode = '\
+	var fn = function(p)\
+	{\
+		console.log(p);\
+	}';
+
+eval(runCode);
+fn("你好");  //你好
+
+
+
+/**
+ * 2.Function()构造函数
+ * Function()构造函数可以通过字符串动态的生成一个函数
+ * 其实Function()构造函数就是被削弱的eval解析器
+ */
+
+var f = new Function("x","y","console.log(x*y);return x*y");
+f(2,5);  //10
+
+</script>

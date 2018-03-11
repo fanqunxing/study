@@ -1,0 +1,274 @@
+<script>
+
+/**
+ * 注解接口
+ * public interface List
+ *{
+ *void add(var data);
+ *void insert(int index,var data);
+ *void pop();
+ *void remove(int index);
+ *var get(int index);
+ *void addAll(Linklist list)
+ *Array toArray();
+ *String toString();
+ *}
+ */
+;(function(window){
+
+function Node(data)
+{
+	this.data = data;
+	this.next = null;
+}
+
+function Linklist()
+{
+	this.length = 0;
+	this.head = null;
+}
+
+Linklist.prototype.add = function(data)
+{
+	var node = new Node(data);
+	if(this.length == 0)
+	{
+		this.head = node;
+	}
+	else
+	{
+		var tempHead = this.head;
+		this.head = node;
+		this.head.next = tempHead;
+	}
+	this.length++;
+}
+
+Linklist.prototype.insert = function(index,data)
+{
+	if(index < 0 || index > this.length)
+	{
+		return false;
+	}
+	if(index==0)
+	{
+		this.add(data);
+	return;
+	}
+
+	var node = new Node(data);
+	var currentNode = this.head;
+
+	for(var nodeIndex = 1;currentNode;currentNode = currentNode.next,nodeIndex++)
+	{
+		if(index == nodeIndex)
+		{
+			var currentNext = currentNode.next;
+			currentNode.next = node;
+			node.next = currentNext;
+		}
+	}
+	this.length++;
+}
+
+Linklist.prototype.pop = function(){
+	var currentNode = this.head;
+	this.head = currentNode.next;
+	this.length--;
+}
+
+Linklist.prototype.remove = function(index){
+
+	if(index < 0 || index >= this.length)
+	{
+		return false;
+	}
+
+	if(index==0)
+	{
+		this.pop();
+		return;
+	}
+
+	var currentNode = this.head;
+	for(var nodeIndex = 1;currentNode;currentNode = currentNode.next,nodeIndex++)
+	{
+		if(index == nodeIndex)
+		{
+			var afterNext = currentNode.next.next;
+			currentNode.next = afterNext;
+		}
+	}
+	this.length--;
+}
+
+Linklist.prototype.get = function(index){
+	var rtnStr = new String();
+	if(index < 0 || index >= this.length)
+	{
+		return false;
+	}
+
+	var currentNode = this.head;
+	for(var nodeIndex = 0;currentNode;currentNode = currentNode.next,nodeIndex++)
+	{
+		if(index == nodeIndex)
+		{
+		return currentNode.data;
+		}
+	}
+
+}
+
+Linklist.prototype.addAll = function(list){
+
+	var currentNode = this.head;
+	for(var nodeIndex = 0;currentNode;currentNode = currentNode.next,nodeIndex++)
+	{
+		if(!currentNode.next)
+		{
+		currentNode.next = list.head;
+		this.length +=  list.length;
+		return;
+		}
+	}
+}
+
+Linklist.prototype.toArray = function(){
+	var rtnList = new Array();
+	var currentNode = this.head;
+	rtnList.push(currentNode.data);
+	for(;currentNode.next; currentNode = currentNode.next)
+	{
+		rtnList.push(currentNode.next.data);
+	}
+	return rtnList;
+}
+
+Linklist.prototype.toString = function(){
+	var arrayList = this.toArray();
+	return arrayList.toString();
+}
+
+window.Linklist = Linklist;
+
+})(window);
+
+
+</script>
+
+
+
+<p>搭建了一个晚上的vue环境都没成功，失望</p>
+<p>写个hashMap吧</p>
+<p>原理是用一个散列表，分出hash值，再由每个散列作为一个LinkList的头</p>
+<p>表达的不太清楚，要依赖我在[JS基础02]里面的LinkList</p>
+<script>
+
+function HashMap() 
+{
+	var _table = [];
+
+	//装元素的类
+	var ValuePair = function(key, value)
+	{
+		this.key = key;
+		this.value = value;
+		this.toString = function()
+		{
+			return '[' + this.key + '-' + this.value + ']';
+		}
+	}
+
+	/**
+	 * hash算法
+	 */
+	var loseloseHashCode = function(key)
+	{
+		var hash = 0;
+		for(var i = 0; i < key.length; i++)
+		{
+			hash += key.charCodeAt(i);
+		}
+		return hash % 37;
+
+	}
+
+	this.put = function(key, value)
+	{
+		var position = loseloseHashCode(key);
+		if(_table[position] == undefined)
+		{
+			_table[position] = new Linklist();
+		}
+		_table[position].add(new ValuePair(key, value));
+	}
+
+	this.get = function(key)
+	{
+		var position = loseloseHashCode(key);
+		if(_table[position] != undefined)
+		{
+			var current = _table[position].head;
+			while(current.next)
+			{
+				if(current.data.key == key)
+				{
+					return current.data.value;
+				}
+				current = current.next;
+
+			}
+			if(current.data.key == key)
+			{
+				return current.data.value;
+			}
+		}
+		return _table[loseloseHashCode(key)];
+	}
+
+	this.remove = function(key)
+	{
+		var position = loseloseHashCode(key);
+		if(_table[position] != undefined)
+		{
+			var current = _table[position].head;
+			var index = 0;
+			while(current.next)
+			{
+				if(current.data.key == key)
+				{
+					_table[position].remove(index);
+					if(_table[position].length == 0)
+					{
+						_table[position] = undefined;
+					}
+				}
+				current = current.next;
+				index++;
+			}
+
+			if(current.data.key == key)
+			{
+				_table[position].remove(index);
+				if(_table[position].length == 0)
+				{
+					_table[position] = undefined;
+				}
+			}
+
+		}
+	}
+}
+
+
+//测试下
+var map = new HashMap();
+map.put("a","张三");
+map.put("b","李四");
+map.remove("a");
+console.log(map.get("a"));
+console.log(map.get("b"));
+
+
+</script>

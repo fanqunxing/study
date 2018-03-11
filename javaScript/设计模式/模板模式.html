@@ -1,0 +1,100 @@
+<pre>
+	模板处理是MVC或MVVM设计的重要一环
+	这种类似于编译的处理，
+    是将写在html里的“自定义代码”，处理成想要html的结果。
+    以underscore.js实现为例子 ，进行下面论述。
+ 
+	vue或ng的指令的处理大致相似，
+	以正则的匹配为先锋预处理主要字段
+	后面用eval()和Function()调用js引擎，变字符串为代码，化腐朽为神奇。
+
+	不过，间接调用js引擎，导致代码无法调试，也是其鸡肋所在。
+</pre>
+
+
+<ul id="tpl">
+	{% for(var i = 0; i < data.length; i++)
+		{
+			var name = data[i].name; %}
+			<li>{%=name%}</li>
+	{%	} %}
+</ul>
+<script>
+
+/**
+ * [dealTpl 模板预处理通过正则实现部分替换]
+ * @param  {[String]} tplStr [模板html字符串]
+ * @return {[String]}        [处理后的html含js的字符串]
+ */
+
+function dealTpl(tplStr)
+{
+	tplStr = tplStr.replace(/&lt;/g,'<');
+	tplStr = tplStr.replace(/&gt;/g,'>');
+	tplStr = tplStr.replace(/[\r\t\n]/g,'');
+	tplStr = tplStr.replace(/\{\%=(.*?)\%\}/g,"',typeof($1)==='undefined'?'':$1,'");
+	tplStr = tplStr.replace(/\{\%/g,"');");
+	tplStr = tplStr.replace(/\%\}/g,"tplList.push('");
+	return tplStr;
+}
+
+
+
+/**
+ * [compileTpl 结合数据再处理]
+ * @param  {[String]} tplStr [预处理后的模板]
+ * @return {[Function]}        [处理完全后的构造函数]
+ */
+function compileTpl(tplStr)
+{
+	var fnBody = "\
+		var tplList = [];\
+		var fn = (function(data){\
+			var tpl_key = '';\
+			for(key in data[0]){\
+				tpl_key += ('var '+ key + '= data[\"'+key+'\"];');\
+			}\
+			eval(tpl_key);\
+			tplList.push('"+ dealTpl(tplStr) +"');\
+			delete tpl_key;\
+		})(templateData);\
+		delete fn;\
+		return tplList.join('');\
+	";
+	return new Function("templateData",fnBody);
+}
+
+
+
+/**
+ * [tpl 编译入口]
+ * @param  {[type]} dom  [dom]
+ * @param  {[type]} data [数据]
+ */
+function tpl(dom,data)
+{
+	var tplElem = document.querySelector(dom);
+	var tplHtml = tplElem.innerHTML;
+	//编译模板
+	var compieHtml = compileTpl(tplHtml)(data);
+	//回执页面
+	tplElem.innerHTML = compieHtml;
+}
+
+
+//测试下
+var data = [
+	{age:"#123",name:"张三"},
+	{age:"#234",name:"李四"},
+	{age:"#345",name:"王伟"}
+]
+
+/**
+ * 页面显示：
+ * 
+ * 张三
+ * 李四
+ * 王伟
+ */
+tpl("#tpl",data);
+</script>

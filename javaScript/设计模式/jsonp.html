@@ -1,0 +1,80 @@
+<html>
+<p>写个jsonp吧</p>
+</html>
+<script>
+var $ = {
+	creatScript:function(url, data, successFn)
+	{
+		this.newScript = document.createElement('script');
+		this.newScript.type = 'text/javascript';
+		var uri = url+"?";
+		var paramList = [];
+		for(var i in data)
+		{
+			var param = "";
+			if(typeof(data[i]) == "object")
+			{
+				param = (i +'=' +JSON.stringify(data[i]));
+			}
+			else
+			{
+				param = (i +'=' + data[i]);
+			}
+			paramList.push(param);
+			paramList.push("jsonpFn=fnTemp");
+		}
+		uri += paramList.join("&");
+		this.creatFunction(successFn);
+		this.newScript.src = uri;
+		this.body = document.getElementsByTagName('body')[0];
+		this.body.appendChild(this.newScript);
+	},
+	creatFunction:function(successFn)
+	{
+		//创建临时函数 完成回调后删除临时函数，临时script
+		var creatFunctionTemp = "window.fnTemp = function(data){successFn(data);window.fnTemp = null;$.destroyScript()}";
+		eval(creatFunctionTemp);
+	},
+	destroyScript:function()
+	{
+		this.body.removeChild(this.newScript);
+	},
+	jsonp:function(order)
+	{
+		var url = order.url,
+			data = order.data || {},
+			callBack = order.callBack,
+			success = order.success || function(){};
+		this.creatScript(url,data,success);
+	}
+}
+
+
+
+/**
+ * 测试一下
+ */
+$.jsonp({
+	url:"http://localhost/jsonp.php",
+	data:{
+		name:"Q"
+	},
+	success:function(e){
+		console.log(e);
+	}
+});
+
+</script>
+
+
+
+//php代码
+<?php 
+
+	$data = $_GET["data"];
+	$jsonpFn = $_GET["jsonpFn"];
+	$result = "success";
+	//返回一个可执行函数
+	echo $jsonpFn."('".$result."')";
+
+ ?>

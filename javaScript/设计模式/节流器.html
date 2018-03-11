@@ -1,0 +1,58 @@
+<p>节流器可以阻止操作连续的触发</p>
+<p>原理是将函数加入定时器，每次触发函数时，先清除上一次的定时器</p>
+<button onclick="getData()">连续点击</button>
+<script>
+/**
+ * [throttle 节流器]
+ * @param  {Function} fn     [回调函数]
+ * @param  {[type]}   params [回调函数的参数]
+ * @param  {[type]}   noRun  [是否阻止执行，默认不阻止]
+ */
+function throttle(fn, params, noRun)
+{
+	var params = params || {};
+	var noRun = noRun || false;
+
+	if(noRun)
+	{
+		fn.id && clearTimeout(fn.id);
+	}
+	else
+	{
+		var p = {
+			context:params.context || null,
+			args:params.args || [],
+			time:params.time || 300
+		}
+		//递归一次，利用参数改变，清除上一次定时器线程里的未执行函数
+		arguments.callee(fn, params, true);
+		//将函数加入定时器线程
+		fn.id = setTimeout(function(){
+			fn.apply(p.context,p.args);
+		},p.time);
+	}
+
+	
+}
+
+
+//======1.测试代码 只弹出一个=======
+throttle(a,{args:[2]});
+throttle(a,{args:[2]});
+function a(c)
+{
+	alert(c);
+}
+
+//=======2.防止用户连续点击========
+function getData()
+{
+	throttle(ajax);
+}
+//ajax请求
+function ajax()
+{
+	alert("success");
+}
+
+</script>

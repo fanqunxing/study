@@ -1,0 +1,32 @@
+<p>函数绑定可以改变函数的上下文</p>
+
+<script>
+
+//绑定函数
+function bind(fn, context)
+{
+	return function()
+	{
+		//改变执行环境
+		return fn.apply(context, arguments);
+	}
+
+}
+
+
+var people = {
+	name:"八戒"
+}
+
+
+function testFn(){
+	console.log(this.name);
+}
+
+var bindFn = bind(testFn, people);
+
+
+bindFn();//八戒
+
+
+</script>

@@ -1,0 +1,99 @@
+<script>
+
+/**
+ * 观察者 采用安全模式编写
+ */
+var Observer = (function(){
+	var _msgs = {};
+	return {
+		// 注册信息接口
+		regist:function(type, fn)
+		{
+			if(typeof _msgs[type] === "undefined")
+			{
+				_msgs[type] = [fn];
+			}
+			else
+			{
+				_msgs[type].push(fn);
+			}
+		},
+		// 发布信息接口
+		fire:function(type, args)
+		{
+			if(typeof _msgs[type] === "undefined")
+			{
+				return;
+			}
+
+			var events = {
+				type : type,
+				args : args || {}
+			};
+			for(var i = 0, len = _msgs[type].length; i < len; i++)
+			{
+				_msgs[type][i].call(this, events);
+			}
+
+		},
+		// 移除信息接口
+		remove:function(type, fn)
+		{
+			if(_msgs[type] instanceof Array)
+			{
+				//倒序遍历
+				for(var i = _msgs[type].length - 1; i >= 0; i--)
+				{
+					if(_msgs[type][i] === fn)
+					{
+						_msgs[type][i].splice(i, i);
+					}
+				}
+			}
+		}
+	}
+})();
+
+
+/**
+ * 消息发布者
+ */
+function PrettyGirl(name)
+{
+	this.name = name;
+	this.request = function(user)
+	{
+		Observer.fire(user);
+	}
+}
+
+
+
+/**
+ * 消息订阅者
+ */
+function Loser(name)
+{
+	this.name = name;
+
+	var _this = this;
+
+	this.response = function()
+	{
+		console.log(_this.name + "回答:我来了" );
+	}
+	
+	Observer.regist(this.name, this.response);
+}
+
+
+var baigujing = new PrettyGirl("白骨精");
+
+var wukong = new Loser("悟空");
+var bajie = new Loser("八戒");
+var shaseng = new Loser("沙憎");
+
+//白骨精点名
+baigujing.request("八戒");
+
+</script>

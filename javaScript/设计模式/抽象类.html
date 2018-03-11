@@ -1,0 +1,93 @@
+<p>抽象类不止是编程的概念</p>
+<p>"去超市买点菜回来！"这就是一个抽象类</p>
+<p>菜，可以是青菜，可以是胡萝卜等等</p>
+<script>
+/**
+ * 抽象类是一种设计模式
+ * 下面我以俄罗斯为例子
+ * 俄罗斯方块是七种方块在一个空间下落
+ * 
+ * 按照最鲜明的逻辑讲我们可以构造两个类
+ * 1.方块
+ * 2.地图
+ *
+ * 但是这个时候我们会发现方块有七种之多
+ * 他们的方法我们很难具体的统一在一个类里面
+ * 那么就需要对方块的共性进行提取
+ * 构造方块的抽象类
+ */
+
+/**
+ * [AbstractBlock 方块抽象类]
+ * 无论什么方块 绘制，移动，停止的方法是一样，
+ * 可以在抽象类里面实现。
+ * 
+ * 但是变形的方法是要根据形状进行矩阵的调换实现
+ * 于是我们预留空方法，给子类实现
+ */
+function AbstractBlock()
+{
+	this.draw = function()
+	{
+		console.log("绘制方块");
+	}
+	this.move = function()
+	{
+		console.log("移动方块");
+	}
+	this.stop = function()
+	{
+		console.log("停止方块");
+	}
+	this.rotate = function()
+	{
+		return new Error("抽象方法不能被调用");
+	}
+}
+
+/**
+ * [Block1 子类1]
+ */
+function Block1()
+{
+	AbstractBlock.call(this,null);
+	this.rotate = function()
+	{
+		console.log("方块1变形");
+	}
+}
+
+/**
+ * [Block2 子类1]
+ */
+function Block2()
+{
+	AbstractBlock.call(this,null);
+	this.rotate = function()
+	{
+		console.log("方块2变形");
+	}
+}
+
+/**
+ * 按此逻辑可以写七个子类，
+ * 此处省略。。。
+ */
+
+/**
+ * 于是可以如下调用
+ */
+var b1 = new Block1();
+var b2 = new Block2();
+run(b1);
+run(b2);
+
+function run(b)
+{
+	b.draw();
+	b.move();
+	b.stop();
+	b.rotate();
+}
+
+</script>

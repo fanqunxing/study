@@ -1,0 +1,35 @@
+<!DOCTYPE html>  
+<html>  
+  
+    <head>  
+        <meta charset="UTF-8">  
+        <title></title>  
+    </head>  
+  
+    <body>  
+  
+        <div id="mydiv">  
+            <strong> 用户名字： </strong> @(name) <br>    
+            <strong style = 'color:green'> 地址: </strong> @(address) <br>    
+            <strong style = 'color:yello'> 性别: </strong> @(sex)  
+        </div>  
+  
+        <script type="text/javascript">  
+            var user = {  
+                name: "sunland",  
+                address: "北京海淀",  
+                sex: "男"  
+            }  
+            
+            document.getElementById("mydiv").innerHTML=
+            formateString(document.getElementById("mydiv").innerHTML,user);  
+              
+            function formateString(str, data) {  
+                return str.replace(/\@\((\w+)\)/g, function(match, key) {
+                    return typeof data[key] === "undefined" ? '' : data[key]  
+                });  
+            }  
+        </script>  
+    </body>  
+  
+</html>  

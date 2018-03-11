@@ -1,0 +1,61 @@
+<pre>
+	策略模式在java中的运用场景是：
+	一个系统有许多许多类，
+	而区分它们的只是他们直接的行为。
+
+	javaScript的复杂程度远低于java
+	我们只需要理解为：
+	一个系统有许多函数，
+	而区分它们的只是他们直接的行为。
+</pre>
+<script>
+/**
+ * 单例编写
+ */
+var CheckStrategy = (function ()
+{
+	//方法的管理容器
+	var Strategy = {
+		isNull:function(val)
+		{
+			return !val && val !== false;
+		},
+		isNumber:function(val)
+		{
+			return !!val && (val < val/1 + 1);
+		}
+	};
+
+	//输出方法
+	var executeStrategy_ = function(type, args)
+	{
+		return Strategy[type].apply(Strategy, args);
+	}
+
+	//新增方法
+	var addStrategy_ = function(type, fn)
+	{
+		Strategy[type] = fn;
+	}
+
+	return {
+		executeStrategy:executeStrategy_,
+		addStrategy:addStrategy_
+	}
+
+})();
+
+
+
+//新增方法测试
+CheckStrategy.addStrategy("islen5",function(val)
+{
+	return val.length <= 5;
+});
+
+
+console.log(CheckStrategy.executeStrategy("isNull",[]));//true
+console.log(CheckStrategy.executeStrategy("islen5",["dsddsss"]));//false
+
+
+</script>

@@ -1,0 +1,122 @@
+<p>接口在javascript简单场景下是没有必要的</p>
+<p>开发中注解式的接口实际上是最常用的</p>
+<p>关于接口类有没有用？纠结了一会儿</p>
+<script>
+/**
+ * 接口实现1
+ * 注解的方法
+ * 应用场景比较多，也比较实用
+ * 
+ * 下面是一个例子，注解是比较直观的
+ */
+/**
+ * [Router js路由]
+ * 1. add(hash, fn) 注册路由事件
+ * 2. remove(hash, fn) 取消路由事件
+ * 3. delete(hash) 移除路由
+ * 4. trigger(hash) 触发路由
+ */
+function Router()
+{
+	//代码省略
+}
+
+
+
+
+/**
+ * 接口的实现2
+ * 通过接口类来强制要求实现接口的方法
+ * 比较大型的集体开发适用
+ * 下面接口类编写的不太严格
+ */
+
+/**
+ * [Interface 接口类]
+ * @param {[type]} name    [接口名]
+ * @param {[type]} methods [方法list]
+ */
+function Interface(name,methods)
+{
+	this.methods=[];
+	for(var i=0,len=methods.length;i<len;i++)
+	{
+		if(typeof methods[i] !== 'string')
+		{
+			throw new Error('方法名字必须是字符串！')
+		}
+		this.methods.push(methods[i]);
+	}
+}
+/**
+ * [implements 添加检测接口是否实现的静态方法]
+ * @param  {[type]} clazz     [实现接口的类]
+ * @param  {[type]} interfaces [接口list]
+ */
+Interface.implements = function(clazz, interfaces)
+{
+   var object = new clazz();//临时实例class
+   //检查是否有实现方法
+   for (var i = 0; i < interfaces.length; i++) 
+   {
+        var interface = interfaces[i];
+        for (var j = 0; j < interface.methods.length; j++) 
+        {
+            var method = interface.methods[j];
+            if (!object[method] || typeof object[method] !== "function")
+            {
+                throw new Error("接口中的" + method + "方法未被实现!");
+            }
+        }
+    }
+    delete object; //销毁实例
+}
+
+
+
+/**
+ * 使用接口类 
+ */
+
+//创建接口
+var PeopleInterface = new Interface('PeopleInterface',['eat','sleep']);
+
+//实现接口的类Student
+
+Interface.implements(Student, [PeopleInterface]);
+function Student(name)
+{
+	var _name = name;
+
+	this.eat = function()
+	{
+		alert(_name + " eat");
+	}
+	this.sleep = function()
+	{
+		alert(_name + " sleep");
+	}
+}
+
+//未实现接口的类Car
+//程序抛异常 = >接口中的sleep方法未被实现!
+Interface.implements(Car, [PeopleInterface]);
+function Car(name)
+{
+	var _name = name;
+
+	this.run = function()
+	{
+		alert(_name + " run");
+	}
+
+	this.eat = function()
+	{
+		alert(_name + " sleep");
+	}
+}
+
+
+
+
+</script>

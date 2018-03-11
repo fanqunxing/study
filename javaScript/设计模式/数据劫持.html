@@ -1,0 +1,101 @@
+<input id="input" type="text">
+<script>
+/**
+ * Object.defineProperty();
+ * 语法：
+ * 		Object.defineProperty(obj, prop, descriptor)
+ * 参数说明：
+ * 	obj：必需。目标对象 
+ * 	prop：必需。需定义或修改的属性的名字
+ * 	descriptor：必需。目标属性所拥有的特性
+ *
+ * 返回值：
+ * 	传入函数的对象。即第一个参数obj
+ */
+
+//1.增加和修改原有对象的属性
+var obj = {a:"hello"};
+Object.defineProperty(obj,"a",{
+	writable:true,
+	enumerable:true,
+	configurable:true,
+	value:"modfiy"
+});
+
+Object.defineProperty(obj,"b",{
+	writable:false,
+	enumerable:false,
+	configurable:false,
+	value:"add"
+});
+
+// console.log(obj);
+
+/**
+ * value: 设置属性的值
+ * writable: 值是否可以重写。true | false
+ * enumerable: 目标属性是否可以被枚举。true | false
+ * configurable: 目标属性是否可以被删除或是否可以再次修改特性 true | false
+ * 
+ */
+
+
+
+//2.getter/setter方法重写
+//注意：当使用了getter或setter方法，不允许使用writable和value这两个属性
+var obj2 = {a:"hello"};
+var value = "hello";
+Object.defineProperty(obj2,"a",{
+	enumerable:true,
+    configurable:true,
+    get:function(){
+    	// console.log('get');
+    	return value;
+    },
+    set:function(val){
+    	// console.log('set');
+    	value = val;
+    }
+});
+
+obj2.a = "n";//set
+obj2.a;//get
+
+//3.数据劫持
+//利用这个可以实现数据变化的监听
+var data = {name:"Q",age:23};
+Object.keys(data).forEach(function(key){
+	var value = data[key];
+	Object.defineProperty(data,key,{
+        enumerable:true,
+        configurable:true,
+        get:function(){
+            // console.log('listen get');
+            return value;
+        },
+        set:function(val){
+            // console.log('listen set');
+            value = val;
+        }
+    })
+});
+data.name = "M";
+
+//4.dom劫持
+var dom = document.getElementById("input");
+var domVal = dom.value = "hello";
+Object.defineProperty(dom,"value",{
+    enumerable:true,
+    configurable:true,
+    get:function(){
+        console.log('listen get');
+        return domVal;
+    },
+    set:function(val){
+        console.log('listen set');
+        domVal = val;
+    }
+});
+dom.value;
+
+</script>

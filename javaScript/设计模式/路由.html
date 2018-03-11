@@ -1,0 +1,101 @@
+<p>js路由实现很简单，通过监听hash改变，触发注册事件</p>
+<p>用过效果还不错</p>
+
+<script>
+/**
+ * [Router js路由]
+ * 1. add(hash, fn) 注册路由事件
+ * 2. remove(hash, fn) 取消路由事件
+ * 3. delete(hash) 移除路由
+ * 4. trigger(hash) 触发路由
+ */
+function Router()
+{
+	var _hashMap = {};//存放hash值得map（不是hashMap）
+	var _this = this;
+
+	(function init(){
+		window.addEventListener('load', function(){
+			var hash = location.hash.slice(1);
+			_this.trigger(hash);
+		});
+    	window.addEventListener('hashchange', function(){
+    		var hash = location.hash.slice(1);
+			_this.trigger(hash);
+    	});
+	})();
+
+	this.add = function(hash, fn)
+	{
+		if(!_hashMap[hash])
+		{
+			_hashMap[hash] = new Array(fn);
+		}
+		else
+		{
+			_hashMap[hash].push(fn);
+		}
+	}
+
+	this.remove = function(hash, fn)
+	{
+		if(!_hashMap[hash])
+		{
+			return;
+		}
+		else
+		{
+			for (var i = 0; i < _hashMap[hash].length; i++) 
+			{
+				if(_hashMap[hash][i] == fn)
+				{
+					_hashMap[hash].splice(i, 1);
+				}
+			}
+		}
+	}
+
+	this.delete = function(hash)
+	{
+		delete _hashMap[hash];
+	}
+
+	this.trigger = function(hash)
+	{
+		if(! _hashMap[hash])
+		{
+			return;
+		}
+
+		for (var i = 0; i < _hashMap[hash].length; i++) 
+		{
+			_hashMap[hash][i].call(this, null);
+		}
+	}
+}
+
+
+//======== 测试下 =============
+
+var router = new Router();
+
+router.add("/a",function(){
+	alert("加载a页面");
+});
+router.add("/a",function(){
+	alert("加载a.js");
+});
+
+router.add("/b",loadPageB);
+
+router.remove("/b",loadPageB);
+
+// router.delete("/a");
+
+function loadPageB()
+{
+	alert("加载b页面");
+	alert("加载b.js");
+}
+
+</script>

@@ -1,0 +1,58 @@
+<pre>
+	html编译已经是成熟的技术了
+	无论是java里面的jsp
+	或者是前端,underscore,vue,react等都有涉及；
+	原理是将模板取出，按照规则解析成html返回
+</pre>
+
+<ul id="tpl">
+	<li>{{item1}}</li>
+	<li>{{item2}}</li>
+	<li>{{item3}}</li>
+</ul>
+
+<script>
+//下面是一个编译html的栗子
+
+/**
+ * [compileHtml html编译器]
+ * @param  {[type]} str  [字符串]
+ * @param  {[type]} data [数据]
+ */
+function compileHtml(str, data)
+{
+	// replace的回调用法，回调参数为正则匹配值
+	return str.replace(/\{\{(\w+)\}\}/g, function(match, key){
+		var rtnStr = "";
+		if(typeof data[key] !== undefined)
+		{
+			rtnStr = data[key];
+		}
+		return rtnStr;
+	});
+}
+
+
+/**
+ * [data 数据]
+ * @type {Object}
+ */
+var data = {
+	item1:"张三",
+	item2:"李四",
+	item3:"王二"
+}
+
+
+//编译完放回页面渲染
+var tpl = document.getElementById("tpl");
+tpl.innerHTML = compileHtml(tpl.innerHTML,data);
+
+
+//页面显示
+/**
+ * 张三
+ * 李四
+ * 王二
+ */
+</script>

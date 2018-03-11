@@ -1,0 +1,108 @@
+<p>单例模式吧</p>
+
+<script>
+/**
+ * 1.收拢变量的单例
+ * 控制全局变量的个数
+ * 是js编程里很重要的法则
+ */
+var $ = {
+	add:function(a, b)
+	{
+		return a + b;
+	},
+	max:function(a, b)
+	{
+		return Math.max(a,b);
+	}
+}
+
+
+/**
+ * 2.安全模式的单例
+ * 保护私有变量
+ */
+var P = (function(){
+
+	var name = "张三";
+
+	return{
+		getName:function()
+		{
+			return name;
+		},
+		setName:function(pname)
+		{
+			name = pname;
+		}
+	}
+})();
+
+/**
+ * 3.控制构造器的作用域
+ * 我用的比较多
+ */
+
+//自执行函数控制作用域
+;(function(){
+
+	//单例构造器
+	function Singleton()
+	{
+		this.add = function(a,b)
+		{
+			return a+b;
+		}
+		this.max = function(a,b)
+		{
+			return Math.max(a,b)
+		}
+	}
+
+	//只在全局上注册一个实例
+	//其他地方无法访问到类的构造器
+	window.Single = new Singleton();
+})();
+
+
+
+/**
+ * 4.惰性单例
+ * 仿照java编写
+ */
+var Singleton = (function(){
+
+	//静态常量
+	var _instance = null;
+
+	//单例构造器
+	function Singleton()
+	{
+		this.add = function(a, b)
+		{
+			return a + b;
+		}
+	}
+
+	//获取单例的静态方法
+	function getInstance_()
+	{
+		if(!_instance)
+		{
+			_instance = new Singleton();
+		}
+		return _instance;
+	}
+
+	
+	return {
+		getInstance:getInstance_
+	}
+
+})();
+
+
+var s = Singleton.getInstance();
+var t = Singleton.getInstance();
+console.log(s===t);//true
+</script>

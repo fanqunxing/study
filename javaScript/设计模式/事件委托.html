@@ -1,0 +1,58 @@
+<p>写个事件委托吧</p>
+<ul class="ul">
+	<li class="item">1</li>
+	<li class="item">2</li>
+	<li class="item">3</li>
+	<li>4</li>
+</ul>
+<ul class="ul">
+	<li class="item">565</li>
+	<li>4</li>
+</ul>
+<script>
+
+/**
+ * [delegate description]
+ * @return {[type]} [description]
+ */
+function delegate(parent, elem, type, fn)
+{
+	var parentDomList = document.querySelectorAll(parent);
+	var elemDomList = document.querySelectorAll(elem);
+
+	parentDomList.forEach(function(parentDom){
+		//不考虑兼容
+		parentDom.addEventListener(type, function(e){
+			var e = e || window.event;
+			var target = e.target || e.srcElement;
+			if(isCheckDom(target,elemDomList))
+			{
+				//改变this指向，传入事件对象
+				fn.call(target, e);
+			}
+		}, false);
+	});
+}
+
+
+
+function isCheckDom(target,elemDomList)
+{
+	var bFlag = false;
+	for(var i = 0; i < elemDomList.length; i++)
+	{
+		if(target == elemDomList[i])
+		{
+			bFlag = true;
+			break;
+		}
+	}
+	return bFlag;
+}
+
+
+
+delegate(".ul",".item","click",function(){
+	console.log(this.innerText);
+});
+</script>

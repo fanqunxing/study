@@ -1,0 +1,88 @@
+<p>学习模式</p>
+<p>学习模式是指：一个函数方法，能根据自身的环境进行自我修改</p>
+<script>
+/**
+ * 下面是常用的事件绑定兼容策略
+ * 每次绑定元素的时候
+ * 都需要进行一次浏览器类型判断
+ * 无疑这个操作的重复是无意义的
+ * 并且损耗性能。
+ * 可以考虑学习模式优化
+ */
+var A = new Object();
+A.on = function(elem, type, fn)
+{
+	//非IE
+	if(elem.addEventListener)
+	{
+		elem.addEventListener(type, fn, false);
+	}
+	//IE浏览器
+	else
+	{
+		elem.attachEvent('on'+ type, fn);
+	}
+}
+
+
+/**
+ * 1：即时学习
+ * 利用一个闭包
+ * 对on方法进行了判断后重定义
+ * 即时加载，会争抢内存
+ */
+var B = new Object();
+B.on = (function(elem, type, fn)
+{
+	if(document.addEventListener)
+	{
+		return function(elem, type, fn)
+		{
+			elem.addEventListener(type, fn, false);
+		}
+	}
+	else
+	{
+		return function(elem, type, fn)
+		{
+			elem.attachEvent('on'+ type, fn);
+		}
+	}
+})();
+
+
+
+
+/**
+ * 2.惰性学习
+ * 在调用on方法的时候对on进行重定义
+ * 在首次调用的时候会耗内存
+ */
+var C = new Object();
+C.on = function(elem, type, fn)
+{
+	//非IE
+	if(elem.addEventListener)
+	{
+		//重新定义on方法
+		C.on = function(elem, type, fn)
+		{
+			elem.addEventListener(type, fn, false);
+		}
+	}
+	//IE浏览器
+	else
+	{
+		//重新定义on方法
+		C.on = function(elem, type, fn)
+		{
+			elem.attachEvent('on'+ type, fn);
+		}
+	}
+	//首次执行一次on方法
+	C.on(elem, type, fn);
+}
+
+
+
+</script>
