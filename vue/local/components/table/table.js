@@ -1,6 +1,8 @@
 seajs.use("./components/table/table.css");
 define(function(require, exports, module){
 	var Vue = require("../../lib/vue");
+	var $ = require("../../lib/jquery");
+	console.log($);
 	var template = '\
 		<table class="table">\
 	    	<thead>\
