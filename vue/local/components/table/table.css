@@ -1,0 +1,11 @@
+.table{
+	border:solid 1px #ccc;
+}
+.table tr,
+.table th{
+	height: 30px;
+	text-align: center;
+}
+.table th{
+	background:#66cccc;
+}

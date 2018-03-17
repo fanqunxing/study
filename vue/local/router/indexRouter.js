@@ -1,9 +1,9 @@
 define(function(require, exports, module){
 	var Vue = require("../lib/vue");
 	var VueRouter = require("../lib/vue-router");
-	var indexPage = require("../components/index/index-page");
+	var bannerPage = require("../components/index/banner-page");
+	var table = require("../components/table/table");
 	
-
 	Vue.use(VueRouter);
 
 	var Foo = { template: '<div>foo</div>' };
@@ -12,13 +12,18 @@ define(function(require, exports, module){
 	var routes = [
 		{
 			path: '/a', 
-			name:"Foo",
-	  		component: Foo 
+			name:"bannerPage",
+	  		component: bannerPage 
 	  	},
 	  	{
 	  		path: '/b', 
-	  		name:"Bar",
-	  		component: Bar 
+	  		name:"table",
+	  		component: table 
+	  	},
+	  	{
+	  		path: '/c', 
+	  		name:"Foo",
+	  		component:Foo
 	  	}
 	];
 

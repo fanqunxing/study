@@ -19,10 +19,10 @@ define(function(require, exports, module) {
 			return {
 				itemList:[{
 					url:"/a",
-					name:"首页导航"
+					name:"轮播图"
 				},{
 					url:"/b",
-					name:"文章内容"
+					name:"表格"
 				},{
 					url:"/c",
 					name:"自由论坛"
