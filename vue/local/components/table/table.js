@@ -2,7 +2,6 @@ seajs.use("./components/table/table.css");
 define(function(require, exports, module){
 	var Vue = require("../../lib/vue");
 	var $ = require("../../lib/jquery");
-	console.log($);
 	var template = '\
 		<table class="table">\
 	    	<thead>\
@@ -24,20 +23,7 @@ define(function(require, exports, module){
 	 Vue.component("table-template",{
 	 	data:function(){
 	 		return {
-	 			list:[
-	 				{
-	 					name:"曹操",
-	 					score:"89"
-	 				},
-	 				{
-	 					name:"孙权",
-	 					score:"98"
-	 				},
-	 				{
-	 					name:"刘备",
-	 					score:"65"
-	 				}
-	 			]
+	 			list:[]
 	 		}
 	 	},
 	 	template:template,
@@ -47,20 +33,16 @@ define(function(require, exports, module){
 	 		}
 	 	},
 	 	mounted:function(){
-	 		this.list = [
-	 			{
- 					name:"曹丕",
- 					score:"90"
- 				},
- 				{
- 					name:"孙皓",
- 					score:"99"
- 				},
- 				{
- 					name:"刘禅",
- 					score:"66"
- 				}
-	 		]
+	 		var _this = this;
+	 		$.ajax({
+	 			url:"/code/vue/study/vue/local/data/table.json",
+	 			type:"get",
+	 			dataType:"text",
+	 			success:function(json){
+	 				_this.list = JSON.parse(json).data;
+	 			}
+	 		});
+	 		
 	 	}
 	 });
 
