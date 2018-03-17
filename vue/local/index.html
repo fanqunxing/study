@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue</title>
+	<script src="./lib/sea.js"></script>
+	<script src="./lib/seajs-css.js"></script>
+	<script>
+		seajs.use("./config");
+	</script>
+</head>
+<body>
+
+<div id="app" class="app">
+	<nav-template></nav-template>
+    <router-view></router-view>
+    <index-page></index-page>	
+</div>
+
+<script>
+
+seajs.use([
+	"./assets/common.css",
+	"./assets/index.css"
+],function(){
+	seajs.use("./index");
+});
+
+</script>
+</body>
+</html>

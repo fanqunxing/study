@@ -1,0 +1,20 @@
+.navigation-bar ul li{
+	float: left;
+	background:#66cccc;
+}
+.navigation-bar ul li a{
+	display: block;
+	padding: 0 52px;
+	font-size: 16px;
+	line-height: 50px;
+	color: #fff;
+}
+.navigation-bar ul li a:hover,
+.navigation-bar .first{
+	background:#f15694;
+	border-radius: 4px;
+}
+.navigation-bar li a.router-link-active{
+	background:#f15694;
+	border-radius: 4px;
+}
