@@ -14,8 +14,59 @@
 <div id="app" class="app">
 	<nav-template></nav-template>
     <router-view></router-view>
-	<!-- <table-template></table-template> -->
 </div>
+<script type="text/x-template" id="slide-template">
+	<div class="slide">
+		<div class="slideshow">
+			<transition-group tag="ul" name="image">
+				<li v-for="(img, index) in imgArray" v-show="index===mark" :key="index">
+					<a href="#">
+						<img :src="img">
+					</a>
+				</li>
+			</transition-group>
+		</div>
+		<div class="bar">
+			<span v-for="(item, index) in imgArray" @click="change(index)" :class="{active:index===mark}" :key="index">
+			</span>
+		</div>
+	</div>
+</script>
+
+
+<script type="text/x-template" id="table-template">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>姓名</th>
+				<th>成绩</th>
+				<th>删除</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="(item, index) in list">
+				<td>{{item.name}}</td>
+				<td>{{item.score}}</td>
+				<td @click="deletes(index)">删除</td>
+			</tr>
+		</tbody>
+	</table>
+</script>
+
+<script type="text/x-template" id="navigation-template">
+	<div class = "navigation-bar">
+		<ul class = "clearfix">
+			<li v-for="(item, index) in itemList">
+				<router-link v-bind:to="item.url" :index="index">{{item.name}}
+				</router-link>
+			</li>
+		</ul>
+	</div>
+</script>
+
+
+
+
 <script>
 
 seajs.use([

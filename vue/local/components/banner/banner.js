@@ -56,7 +56,7 @@ define(function(require, exports, module){
 		}
     });*/
 	Vue.component("banner",{
-		template:template,
+		template:"#slide-template",
 		data:function(){
 			return{
 				mark: 0,

@@ -2,26 +2,8 @@ seajs.use("./components/table/table.css");
 define(function(require, exports, module){
 	var Vue = require("../../lib/vue");
 	var $ = require("../../lib/jquery");
-	console.log($);
-	var template = '\
-		<table class="table">\
-	    	<thead>\
-				<tr>\
-					<th>姓名</th>\
-					<th>成绩</th>\
-					<th>删除</th>\
-				</tr>\
-	    	</thead>\
-	    	<tbody>\
-				<tr v-for="(item, index) in list">\
-					<td>{{item.name}}</td>\
-					<td>{{item.score}}</td>\
-					<td @click="deletes(index)">删除</td>\
-				</tr>\
-	    	</tbody>\
-	    </table>';
 
-	 Vue.component("table-template",{
+	Vue.component("table-template",{
 	 	data:function(){
 	 		return {
 	 			list:[
@@ -40,7 +22,7 @@ define(function(require, exports, module){
 	 			]
 	 		}
 	 	},
-	 	template:template,
+	 	template:"#table-template",
 	 	methods:{
 	 		deletes:function(index){
 	 			this.list.splice(index,1);

@@ -2,19 +2,8 @@ seajs.use("./components/nav/nav-template.css");
 define(function(require, exports, module) {
 	var Vue = require("../../lib/vue");
 
-	var template = '\
-		<div class = "navigation-bar">\
-			<ul class = "clearfix">\
-				<li v-for="(item, index) in itemList">\
-					<router-link v-bind:to="item.url" :index="index">{{item.name}}\
-					</router-link>\
-				</li>\
-			</ul>\
-		</div>';
-
-
 	Vue.component("nav-template",{
-		template:template,
+		template:"#navigation-template",
 		data:function(){
 			return {
 				itemList:[{
