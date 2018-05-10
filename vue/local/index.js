@@ -3,14 +3,16 @@ define(function(require, exports, module) {
 	var VueRouter = require("Vue-router");
 	var Nav = require("./components/nav/nav");
 	var indexRouter = require("./router/indexRouter");
-	Vue.use(VueRouter);
+	var $ = require("./lib/jquery");
 
-	
+	Vue.use(VueRouter);
 	
 	new Vue({
-		// el:
 		router:indexRouter
 	}).$mount("#app");
 
+	$.ajax({
+		url:"https://baike.so.com/Asyncdata/entryStat"
+	})
 
 });

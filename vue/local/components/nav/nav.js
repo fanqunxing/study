@@ -26,8 +26,6 @@ define(function(require, exports, module) {
 					name:"留言板"
 				}]
 			}
-		},
-		methods:{
 		}
 	});
 });

@@ -5,10 +5,6 @@ define(function(require, exports, module){
 	var table = require("../components/table/table");
 	
 	Vue.use(VueRouter);
-
-	var Foo = { template: '<div>foo</div>' };
-	var Bar = { template: '<div>bar</div>' };
-
 	var routes = [
 		{
 			path: '/a', 
@@ -20,11 +16,6 @@ define(function(require, exports, module){
 	  		name:"table",
 	  		component: table 
 	  	},
-	  	{
-	  		path: '/c', 
-	  		name:"Foo",
-	  		component:Foo
-	  	}
 	];
 
 	module.exports = new VueRouter({
