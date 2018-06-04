@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <style type="text/css">
+        #canvas{
+            width: 7rem;
+            margin: .25rem 0 0 1.5rem;
+            border: 1px solid black;
+            display: block;
+        }
+    </style>
+</head>
+<body> 
+    <canvas id="canvas" width="1000" height="600"></canvas>
+</body>
+</html>
+<script type="text/javascript">
+    /**
+     * rem 布局初始化
+     */
+    $('html').css('font-size', $(window).width()/10);
+    /**
+     * 获取 canvas 画布
+     * 获取 canvas 绘图上下文环境
+     */
+    var canvas = $('#canvas')[0];
+    var cxt = canvas.getContext('2d');
+    var balls = [];
+    
+    /**
+     * 事件交互, 点击事件为例
+     * isPointInPath(横坐标, 纵坐标)
+     */
+    for(var i = 0; i < 10; i++){
+        var ball = {
+            X: Math.random()*canvas.width,
+            Y: Math.random()*canvas.height,
+            R: Math.random()*50 + 20
+        }
+        balls[i] = ball;
+    }
+    
+    draw();
+    $("#canvas").click(function(){
+        //标准的获取鼠标点击相对于canvas画布的坐标公式
+        var x = event.pageX - canvas.getBoundingClientRect().left;
+        var y = event.pageY - canvas.getBoundingClientRect().top;
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].X, balls[i].Y, balls[i].R, 0, Math.PI*2);
+            if(cxt.isPointInPath(x, y)){
+                cxt.fillStyle = "red";
+                cxt.fill();
+            }
+        }
+    });
+    
+    function draw(){
+        cxt.fillStyle = "blue";
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].X, balls[i].Y, balls[i].R, 0, Math.PI*2);
+            cxt.fill();
+        }
+    }
+</script>

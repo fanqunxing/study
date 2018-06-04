@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="src/drawTool.css">
+	<script type="text/javascript" src="src/drawTool.js"></script>
+	<style type="text/css">
+		/**{
+			margin: 0px;
+			padding: 0px;
+		}*/
+		#canvas{
+			width: 400px;
+			height: 400px;
+			border: solid 1px red;
+			margin: auto;
+			margin-top: 100px;
+		}
+		.drawTool-node{
+			border:solid 1px red;
+			cursor: pointer;
+		}
+		.js-drawTool-inner-node{
+			width: 100px;
+			height: 100px;
+		}
+	</style>
+</head>
+<body>
+	<div id="canvas" class="canvas">
+
+	</div>
+	<script type="text/javascript" src="demo.js"></script>
+	<script type="text/javascript">
+		var canvas = document.getElementById('canvas');
+		var drawTool = new DrawTool(canvas);
+		drawTool.addNode({
+			pos:{x:20,y:60},
+			html:"<div>盒子</div>",
+			anchors:[[0, 0], [0, 50], [100, 100]]
+		});
+		drawTool.addNode({
+			pos:{x:50,y:60},
+			html:"<div>什么盒子</div>",
+			anchors:[[0, 0], [0, 50], [100, 100]]
+		});
+		console.log()
+	</script>
+</body>
+</html>
