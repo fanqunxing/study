@@ -346,7 +346,6 @@ var Classes = {
 	controller: "drawTool-controller",
 	ctrlli: "drawTool-controller-li",
 	ctrlJs: "js-drawTool-controller-li"
-
 }
 
 
@@ -618,6 +617,12 @@ function DrawTool( dom )
 	_ctx = _canvas.getContext( "2d" );
 	var _operate = addLineOperate( _dom );
 	var _ctrlMap = addBezierControl( _dom );
+	var _listenMap = {
+		clickLine: new Function(),
+		deleteLine: function deleteLine(){
+			return true;
+		}
+	};
 
 	Event.delegate( _dom, Classes.innerNodeJs, "mousedown", mousedownOnNode);
 
@@ -695,6 +700,15 @@ function DrawTool( dom )
 			ctrl1.style.top = allPos[1][1] - c1HeiHalf + "px";
 			ctrl2.style.left = allPos[2][0] - c2WidHalf + "px";
 			ctrl2.style.top = allPos[2][1] - c2HeiHalf + "px";
+			//设置初始化的贝塞尔角点
+			oLine.ctrl1 = [
+				allPos[1][0] - c1WidHalf + ctrl1.offsetWidth/2,
+				allPos[1][1] - c1HeiHalf + ctrl1.offsetWidth/2
+			];
+			oLine.ctrl2 = [
+				allPos[2][0] - c2WidHalf + ctrl2.offsetWidth/2,
+				allPos[2][1] - c2HeiHalf + ctrl2.offsetWidth/2
+			];
 		}
 		else
 		{
@@ -703,8 +717,8 @@ function DrawTool( dom )
 			ctrl2.style.left = oLine.ctrl2[0] - c2WidHalf  + "px";
 			ctrl2.style.top = oLine.ctrl2[1]  - c2HeiHalf  + "px";
 		}
-		
 	}
+
 
 	function mousedownOnNode( e )
 	{
@@ -742,16 +756,21 @@ function DrawTool( dom )
 	function clickDeleteLine( e )
 	{
 		var lineid = _selectedLine.lineid;
-		_lineStack.deleteById( lineid );
-		hideDom( _operate );
-		clearCanvas( _ctx , _canvas );
-		linkAllLines( _ctx, _lineStack );
+	 	var isDelete = _listenMap.deleteLine.call( this, _selectedLine );
+	 	if( isDelete )
+	 	{
+	 		_lineStack.deleteById( lineid );
+			hideDom( _operate );
+			clearCanvas( _ctx , _canvas );
+			linkAllLines( _ctx, _lineStack );
+	 	}
+		
 	}
 
 	function mousemoveOnDom( e )
 	{
-		showLine( e );
 		drawSelectedLine();
+		showLine( e );
 	}
 
 	function clickOnDom( e )
@@ -768,6 +787,7 @@ function DrawTool( dom )
 			_operate.style.left = pos.x + "px";
 			_operate.style.top = pos.y + "px";
 			_isSelectedLine = true;
+			_listenMap.clickLine.call( this, _selectedLine );//选中线的切面
 			showDom( _operate );
 		}
 		else
@@ -905,6 +925,7 @@ function DrawTool( dom )
 					allPos.end[1], 
 					0
 		        );
+		        // _listenMap.clickLine( oLine );//点击切面
 		        resLine = oLine;
 		        break;
 		    }
@@ -977,6 +998,11 @@ function DrawTool( dom )
 	this.getAllLines = function ()
 	{
 		return _lineStack;
+	}
+
+	this.listen = function( listenMap )
+	{
+		_listenMap = extend( _listenMap, listenMap );
 	}
 
 	this.init = function( nodeStack, lineStack )
