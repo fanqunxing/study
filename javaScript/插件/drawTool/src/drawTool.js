@@ -621,6 +621,9 @@ function DrawTool( dom )
 		clickLine: new Function(),
 		deleteLine: function deleteLine(){
 			return true;
+		},
+		lineTo: function lineTo(){
+			return true;
 		}
 	};
 
@@ -738,11 +741,20 @@ function DrawTool( dom )
 		var anchorid = e.target.anchorid;
 		if( _activeline.startNodeid )
 		{
-			_activeline.endNodeid = nodeid;
-			_activeline.endAnchorid = anchorid;
-			_activeline.lineType = _lineType;
-			var line = _lineStack.push( _activeline );
-			_activeline = {};
+			var isLineTo = _listenMap.lineTo.call( this, _activeline );
+			if( isLineTo )
+			{
+				_activeline.endNodeid = nodeid;
+				_activeline.endAnchorid = anchorid;
+				_activeline.lineType = _lineType;
+				var line = _lineStack.push( _activeline );
+				_activeline = {};
+			}
+			else
+			{
+				_activeline.startNodeid = null;
+				_activeline.startAnchorid = null;
+			}
 			clearCanvas( _ctx , _canvas );
 			linkAllLines( _ctx, _lineStack );
 		}
@@ -763,14 +775,18 @@ function DrawTool( dom )
 			hideDom( _operate );
 			clearCanvas( _ctx , _canvas );
 			linkAllLines( _ctx, _lineStack );
+	                _selectedLine = null;//释放选中线条
 	 	}
 		
 	}
 
 	function mousemoveOnDom( e )
 	{
+		var x = e.pageX - _canvas.getBoundingClientRect().left;
+        var y = e.pageY - _canvas.getBoundingClientRect().top;
 		drawSelectedLine();
-		showLine( e );
+        selectedLineHover( x, y );
+		linkAllLines();
 	}
 
 	function clickOnDom( e )
@@ -795,6 +811,7 @@ function DrawTool( dom )
 			hideDom( _operate );
 			hideDom( _ctrlMap.ctrl );
 		}
+		linkAllLines();
 	}
 
 
@@ -873,23 +890,15 @@ function DrawTool( dom )
 		}
 	}
 
-	function showLine( e )
-	{
-		var x = e.pageX - _canvas.getBoundingClientRect().left;
-        var y = e.pageY - _canvas.getBoundingClientRect().top;
-        var sLine = selectedLine( x, y );
-		linkAllLines();
-		return sLine;
-	}
 
 	function getSelectedLineByEvt( e )
 	{
 		var x = e.pageX - _canvas.getBoundingClientRect().left;
         var y = e.pageY - _canvas.getBoundingClientRect().top;
-        return selectedLine( x, y );
+        return selectedLineHover( x, y );
 	}
 
-	function selectedLine( x, y )
+	function selectedLineHover( x, y )
 	{
 		var resLine = null;
 		for( var i = 0; i < _lineStack.length; i++ )
