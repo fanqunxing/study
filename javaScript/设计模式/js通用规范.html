@@ -1,0 +1,91 @@
+<script type="text/javascript">
+/**
+ * 纯面向对象模块定义
+ * 优点：利用window注册、快速、灵活
+ * 缺点：依赖关系不明确，全靠script标签顺序执行
+ */
+(function(){
+	function $(){}
+	window.$ = $;
+})();
+
+/**
+ * AMD模块定义
+ * require.js为代表
+ * 优点：接近原生js写法，依赖明确
+ * 缺点：依赖前置，文件太多会卡
+ */
+define(function(){
+	function $(){}
+	return $;
+});
+
+
+/**
+ * CMD模块规范
+ * sea.js为代表
+ * 优点：接近nodejs写法，依赖明确
+ * 缺点：赖加载，文件依赖的时候可能会卡
+ */
+define(function(require, exports, module){
+	function $(){}
+	module.exports = $;
+});
+
+/**
+ * CommonJS模块定义
+ * node.js规范
+ * 优点：纯粹的模块化，优雅
+ * 缺点：兼容性有问题
+ */
+function $(){}
+module.exports = $;
+
+/**
+ * UMD规范模块
+ * vue-cli使用
+ * window + AMD + CommonJS
+ * 优点：多规范并存
+ */
+(function (win, factory) {  
+    if (typeof module === 'object') {
+        module.exports = factory();  
+    } 
+    else if (typeof define === 'function' && define.amd) {  
+        define(factory);
+    }else{  
+        win.$ = factory();  
+    }  
+})(this, function() {  
+    function $(){} 
+    return $;
+});  
+
+
+/**
+ * 通用规范模块
+ * vue-cli使用
+ * window + AMD + CMD + CommonJS
+ * 优点：多规范并存
+ */
+(function (win, factory) {  
+    if (typeof module === 'object') {
+        module.exports = factory();  
+    } 
+    else if (typeof define === 'function' && define.amd) {  
+        define(factory);
+    }else if(typeof define === 'function' && define.cmd) {
+        define(function(require, exports, module){
+            module.exports = factory();
+        }); 
+    }else {  
+        win.$ = factory();  
+    }  
+})(this, function() {  
+    function $(){} 
+    return $;
+}); 
+
+
+
+</script>

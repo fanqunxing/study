@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<pre>
+	js的异步的原理是：
+		1.添加一个任务队列
+		2.主线程轮询事件队列
+
+	js中的异步有：
+		1.ajax请求
+		2.事件监听
+		3.定时器
+
+	从本质上讲所有的异步操作，都是主线程轮询的机制。
+
+	有了这个概念可以解决一些ie上的兼容性问题。
+
+	1.低版本的ie下监听hash值改变
+		<body onhashchange="myFunction()">
+		由于低版本ie不提供onhashchange事件，
+		可以采用定时器轮询hash值得方法。
+	2.低版本浏览器的跨页面通信
+		高版本的浏览器提供了对localStorage的监听
+		低版本可以将通信信息放在cookie中，然后轮询cookie
+	3.低版本的浏览器实现DOMContentLoaded
+		DOMContentLoaded是dom解析完成之后回调执行
+		低版本的只支持onload，但onload还要等待图片和css加载完成。
+		jQuery源码提供了一个方案：
+		当dom未完成解析时，doScroll方法会报错。于是可以结合定时器加try catch实现
+
+</pre>
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>
